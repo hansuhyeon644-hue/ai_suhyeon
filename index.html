@@ -1,0 +1,1596 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>나에게 맞는 직무 유형 테스트</title>
+    <meta
+      name="description"
+      content="12개의 대학생활 질문으로 알아보는 나만의 일하는 스타일과 어울리는 직무 유형 테스트"
+    />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <style>
+      :root {
+        --bg-canvas: #fff7f7;
+        --bg-surface: #ffffff;
+        --bg-soft: #fff0f0;
+        --border-soft: #f5d4d4;
+        --divider-soft: #f7e2e2;
+        --accent: #d94141;
+        --accent-hover: #c43232;
+        --accent-text: #b82d2d;
+        --ink: #241919;
+        --ink-muted: #665252;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100dvh;
+        font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        background-color: var(--bg-canvas);
+        color: var(--ink);
+        word-break: keep-all;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button {
+        font-family: inherit;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .app-shell {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        transition: background-color 280ms ease;
+      }
+
+      /* 상단 바 */
+      .top-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        height: 56px;
+        border-bottom: 1px solid var(--border-soft);
+        background-color: rgba(255, 247, 247, 0.94);
+        backdrop-filter: blur(8px);
+        transition: background-color 280ms ease, border-color 280ms ease;
+      }
+
+      .header-inner {
+        max-width: 1024px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .header-inner.narrow {
+        max-width: 768px;
+      }
+
+      .brand-btn {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        white-space: nowrap;
+        padding: 8px 0;
+      }
+
+      .header-action-btn {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--accent-text);
+        min-height: 44px;
+        padding: 0 8px;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        transition: color 150ms ease;
+      }
+
+      .header-action-btn:hover {
+        color: var(--accent);
+      }
+
+      /* 메인 컨테이너 */
+      .main-stage {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 16px;
+      }
+
+      @media (min-width: 640px) {
+        .main-stage {
+          padding: 40px 24px;
+        }
+      }
+
+      /* 시작 화면 카드 */
+      .start-card {
+        width: 100%;
+        max-width: 1024px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-soft);
+        border-radius: 24px;
+        padding: 24px;
+      }
+
+      @media (min-width: 640px) {
+        .start-card {
+          padding: 40px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .start-card {
+          padding: 48px;
+        }
+      }
+
+      .start-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        align-items: stretch;
+      }
+
+      @media (min-width: 1024px) {
+        .start-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+        }
+      }
+
+      .start-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .kicker {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent-text);
+        margin: 0 0 12px 0;
+      }
+
+      .hero-title {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+        color: var(--ink);
+      }
+
+      @media (min-width: 640px) {
+        .hero-title {
+          font-size: 40px;
+        }
+      }
+
+      .hero-desc {
+        margin: 16px 0 0 0;
+        font-size: 15px;
+        line-height: 1.65;
+        color: var(--ink-muted);
+      }
+
+      .role-preview {
+        border-top: 1px solid var(--divider-soft);
+        padding-top: 16px;
+      }
+
+      .role-preview-label {
+        margin: 0 0 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+
+      .role-preview-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .dot-sep {
+        color: #e2a8a8;
+      }
+
+      .primary-btn {
+        width: 100%;
+        min-height: 52px;
+        padding: 14px 30px;
+        border-radius: 16px;
+        background-color: var(--accent);
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        white-space: nowrap;
+        transition: background-color 150ms ease, transform 120ms ease;
+      }
+
+      @media (min-width: 640px) {
+        .primary-btn.auto-width {
+          width: auto;
+        }
+      }
+
+      .primary-btn:hover {
+        background-color: var(--accent-hover);
+      }
+
+      .primary-btn:active {
+        transform: scale(0.98);
+      }
+
+      .illustration-box {
+        width: 100%;
+        border-radius: 18px;
+        background-color: #fff5f5;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 4 / 3;
+      }
+
+      .illustration-box.square {
+        max-width: 260px;
+        margin: 0 auto;
+        aspect-ratio: 1 / 1;
+      }
+
+      @media (min-width: 1024px) {
+        .start-grid .illustration-box {
+          aspect-ratio: auto;
+          height: 100%;
+        }
+      }
+
+      .illustration-box svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      /* 질문 화면 */
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        min-height: 44px;
+        padding-right: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink-muted);
+        white-space: nowrap;
+      }
+
+      .back-btn:hover {
+        color: var(--ink);
+      }
+
+      .progress-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        max-width: 260px;
+      }
+
+      .progress-track {
+        flex: 1;
+        height: 8px;
+        border-radius: 999px;
+        background-color: #fde2e2;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        width: 100%;
+        height: 100%;
+        background-color: var(--accent);
+        border-radius: 999px;
+        transform-origin: left center;
+        transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .progress-text {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--accent-text);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .quiz-container {
+        width: 100%;
+        max-width: 768px;
+        animation: fade-slide-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes fade-slide-in {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .question-meta {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent-text);
+        margin: 0 0 8px 0;
+      }
+
+      .question-title {
+        margin: 0 0 28px 0;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+
+      @media (min-width: 640px) {
+        .question-title {
+          font-size: 26px;
+        }
+      }
+
+      .options-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      @media (min-width: 768px) {
+        .options-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .option-card {
+        text-align: left;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-soft);
+        border-radius: 24px;
+        padding: 24px;
+        min-height: 128px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+        transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease, opacity 150ms ease;
+      }
+
+      @media (min-width: 640px) {
+        .option-card {
+          padding: 28px;
+          min-height: 168px;
+        }
+      }
+
+      .option-card:hover:not(:disabled) {
+        border-color: #e37d7d;
+        transform: translateY(-2px);
+      }
+
+      .option-card:active:not(:disabled) {
+        transform: scale(0.985);
+      }
+
+      .option-card.selected {
+        background-color: #fff0f0;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(217, 65, 65, 0.16);
+        animation: choice-pop 280ms cubic-bezier(0.22, 1.4, 0.36, 1) forwards;
+      }
+
+      .option-card.dimmed {
+        opacity: 0.55;
+      }
+
+      @keyframes choice-pop {
+        0% {
+          transform: scale(1);
+        }
+        35% {
+          transform: scale(1.032) translateY(-3px);
+        }
+        70% {
+          transform: scale(0.985) translateY(0);
+        }
+        100% {
+          transform: scale(1.01) translateY(-1px);
+        }
+      }
+
+      .option-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .option-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background-color: var(--bg-soft);
+        color: var(--accent-text);
+        font-size: 14px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .option-card.selected .option-badge {
+        background-color: var(--accent);
+        color: #ffffff;
+      }
+
+      .option-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background-color: var(--accent);
+        color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .option-label {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.6;
+        color: var(--ink);
+      }
+
+      @media (min-width: 640px) {
+        .option-label {
+          font-size: 16px;
+        }
+      }
+
+      /* 결과 화면 */
+      .result-grid {
+        width: 100%;
+        max-width: 1024px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: stretch;
+        animation: fade-slide-in 240ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @media (min-width: 1024px) {
+        .result-grid {
+          grid-template-columns: 5fr 7fr;
+        }
+      }
+
+      .result-hero-card,
+      .result-detail-card {
+        border-radius: 24px;
+        border: 1px solid var(--role-border, var(--border-soft));
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      @media (min-width: 640px) {
+        .result-hero-card,
+        .result-detail-card {
+          padding: 36px;
+        }
+      }
+
+      .result-hero-card {
+        background-color: var(--role-hero-bg, #ffe8e8);
+      }
+
+      .result-detail-card {
+        background-color: #ffffff;
+      }
+
+      .result-kicker {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--role-accent-text, var(--accent-text));
+      }
+
+      .result-title {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 900;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        color: #1e1919;
+      }
+
+      @media (min-width: 640px) {
+        .result-title {
+          font-size: 40px;
+        }
+      }
+
+      .result-nickname {
+        margin: 10px 0 0 0;
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.4;
+        color: var(--role-accent-text, var(--accent-text));
+      }
+
+      .result-desc {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #382f2f;
+      }
+
+      .section-heading {
+        margin: 0 0 4px 0;
+        font-size: 19px;
+        font-weight: 800;
+        color: #1e1919;
+      }
+
+      .section-sub {
+        margin: 0 0 18px 0;
+        font-size: 14px;
+        color: #5e5252;
+      }
+
+      .prep-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid var(--role-divider, var(--divider-soft));
+        border-bottom: 1px solid var(--role-divider, var(--divider-soft));
+      }
+
+      .prep-item {
+        padding: 16px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .prep-item + .prep-item {
+        border-top: 1px solid var(--role-divider, var(--divider-soft));
+      }
+
+      .prep-meta {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--role-accent-text, var(--accent-text));
+        font-variant-numeric: tabular-nums;
+      }
+
+      .prep-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e1919;
+      }
+
+      .prep-detail {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.55;
+        color: #5e5252;
+      }
+
+      .chart-title {
+        margin: 0 0 12px 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: #1e1919;
+      }
+
+      .chart-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .chart-row {
+        display: grid;
+        grid-template-columns: 56px 1fr 36px;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .chart-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #5e5252;
+      }
+
+      .chart-label.winner {
+        font-weight: 700;
+        color: #1e1919;
+      }
+
+      .chart-track {
+        height: 10px;
+        border-radius: 999px;
+        background-color: var(--role-bar-track, #fff0f0);
+        overflow: hidden;
+      }
+
+      .chart-fill {
+        width: 100%;
+        height: 100%;
+        border-radius: 999px;
+        transform-origin: left center;
+        background-color: var(--role-bar-muted, #f1baba);
+      }
+
+      .chart-fill.winner {
+        background-color: var(--role-accent, #cf3838);
+      }
+
+      .chart-score {
+        font-size: 12px;
+        font-weight: 500;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        color: #5e5252;
+      }
+
+      .chart-score.winner {
+        font-weight: 700;
+        color: var(--role-accent-text, var(--accent-text));
+      }
+
+      .action-row {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      @media (min-width: 640px) {
+        .action-row {
+          flex-direction: row;
+        }
+      }
+
+      .share-btn {
+        flex: 1;
+        min-height: 52px;
+        padding: 14px 24px;
+        border-radius: 16px;
+        background-color: var(--role-soft-btn, #ffeaea);
+        color: var(--role-accent-text, #a82626);
+        font-size: 16px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        white-space: nowrap;
+        transition: background-color 150ms ease, transform 120ms ease;
+      }
+
+      .share-btn:hover {
+        background-color: var(--role-soft-btn-hover, #ffd8d8);
+      }
+
+      .share-btn:active {
+        transform: scale(0.98);
+      }
+
+      .result-primary-btn {
+        flex: 1;
+        background-color: var(--role-accent, #cf3838);
+      }
+
+      .result-primary-btn:hover {
+        background-color: var(--role-accent-hover, #b82c2c);
+      }
+
+      .copy-feedback {
+        margin: 8px 0 0 0;
+        min-height: 18px;
+        font-size: 12px;
+        text-align: center;
+        color: #5e5252;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .option-card.selected,
+        .quiz-container,
+        .result-grid {
+          animation: none;
+        }
+        .progress-fill {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app-shell"></div>
+
+    <script>
+      const ROLE_ORDER = ['pm', 'dev', 'design', 'data'];
+
+      const ROLE_SHORT_LABELS = {
+        pm: '기획',
+        dev: '개발',
+        design: '디자인',
+        data: '데이터',
+      };
+
+      const QUIZ_QUESTIONS = [
+        {
+          id: 1,
+          context: '조별과제',
+          question: '조별과제 첫 회의, 다들 어색해서 방향이 안 잡힐 때 나는?',
+          options: [
+            {
+              id: 'A',
+              label: '전체 일정표와 역할 분담 초안을 먼저 짜서 “이렇게 해볼까요?” 제안한다',
+              role: 'pm',
+            },
+            {
+              id: 'B',
+              label: '우리가 실제로 만들어야 할 결과물의 구현 방식과 기능 구조부터 따져본다',
+              role: 'dev',
+            },
+          ],
+        },
+        {
+          id: 2,
+          context: '동아리',
+          question: '동아리 신입 부원 모집 홍보를 맡게 됐다. 가장 먼저 신경 쓰는 것은?',
+          options: [
+            {
+              id: 'A',
+              label: '피드에서 시선을 확 끄는 포스터 색감과 읽기 편한 카드뉴스 배치',
+              role: 'design',
+            },
+            {
+              id: 'B',
+              label: '작년 지원율이 높았던 요일·홍보 채널과 학과별 유입 패턴 분석',
+              role: 'data',
+            },
+          ],
+        },
+        {
+          id: 3,
+          context: '아르바이트',
+          question: '카페·매장 아르바이트 중 피크타임마다 주문이 밀린다면 내가 떠올리는 해결책은?',
+          options: [
+            {
+              id: 'A',
+              label: '시간대별 인기 메뉴 비중을 세어두고 미리 준비할 재료를 계산해둔다',
+              role: 'data',
+            },
+            {
+              id: 'B',
+              label: '주문·제조·픽업 동선이 겹치지 않도록 팀원 역할을 다시 배치해본다',
+              role: 'pm',
+            },
+          ],
+        },
+        {
+          id: 4,
+          context: '조별과제',
+          question: '팀플 발표나 웹 결과물을 최종 제출하기 직전, 더 끝까지 붙잡는 부분은?',
+          options: [
+            {
+              id: 'A',
+              label: '처음 보는 사람도 한눈에 이해하고 완성도 있다고 느낄 화면 흐름과 여백',
+              role: 'design',
+            },
+            {
+              id: 'B',
+              label: '시연 중에 버튼이 안 눌리거나 오류가 나지 않도록 기능 동작 꼼꼼히 점검',
+              role: 'dev',
+            },
+          ],
+        },
+        {
+          id: 5,
+          context: '동아리',
+          question: '동아리 축제 부스를 준비하게 됐을 때, 내가 가장 재미있게 할 수 있는 일은?',
+          options: [
+            {
+              id: 'A',
+              label: '부스 현수막과 굿즈, 안내 포스터까지 우리 팀만의 분위기로 예쁘게 꾸미기',
+              role: 'design',
+            },
+            {
+              id: 'B',
+              label: '사람들이 발길을 멈추고 참여할 수 있게 부스 콘셉트와 운영 순서 짜기',
+              role: 'pm',
+            },
+          ],
+        },
+        {
+          id: 6,
+          context: '아르바이트',
+          question: '매장에서 매일 반복되는 재고 체크·마감 정산이 번거롭게 느껴질 때 나는?',
+          options: [
+            {
+              id: 'A',
+              label: '일주일치 판매량과 폐기 수치를 모아 어디서 손실이 나는지 원인부터 찾는다',
+              role: 'data',
+            },
+            {
+              id: 'B',
+              label: '숫자만 넣으면 자동으로 합산·정리되는 시트 수식이나 작은 도구를 만든다',
+              role: 'dev',
+            },
+          ],
+        },
+        {
+          id: 7,
+          context: '조별과제',
+          question: '팀 회의로 발표 주제를 고를 때, 내가 가장 설득력 있다고 느끼는 근거는?',
+          options: [
+            {
+              id: 'A',
+              label: '“이 주제가 청중 입장에서 가장 공감되고, 해결하려는 문제와 흐름이 자연스러워요”',
+              role: 'pm',
+            },
+            {
+              id: 'B',
+              label: '“최근 통계와 사전 설문 수치를 보면 이 주제의 필요성이 숫자로 딱 드러나요”',
+              role: 'data',
+            },
+          ],
+        },
+        {
+          id: 8,
+          context: '동아리',
+          question: '동아리 소개 페이지나 신입생 안내 노션을 새로 만든다면 맡고 싶은 파트는?',
+          options: [
+            {
+              id: 'A',
+              label: '신청 폼 연동, 자동 응답 연결, 카테고리 구조처럼 실제로 작동하는 뼈대 구축',
+              role: 'dev',
+            },
+            {
+              id: 'B',
+              label: '방문자가 헷갈리지 않는 메뉴 배치, 대표 이미지, 깔끔한 톤앤매너 디자인',
+              role: 'design',
+            },
+          ],
+        },
+        {
+          id: 9,
+          context: '아르바이트',
+          question: '매니저가 “이번 주말에 작은 손님 이벤트를 해볼까?”라고 의견을 물었을 때?',
+          options: [
+            {
+              id: 'A',
+              label: 'QR 스캔이나 모바일 스탬프 적립이 현장에서 오류 없이 바로 쓰일지 먼저 확인한다',
+              role: 'dev',
+            },
+            {
+              id: 'B',
+              label: '손님이 쉽게 참여할 수 있는 이벤트 규칙과 안내 멘트, 진행 순서를 구상한다',
+              role: 'pm',
+            },
+          ],
+        },
+        {
+          id: 10,
+          context: '조별과제',
+          question: '직접 돌린 설문조사 결과를 발표 슬라이드에 정리해야 할 때 내가 더 집중하는 일은?',
+          options: [
+            {
+              id: 'A',
+              label: '학년별·성별 등 응답자 조건을 교차 비교해 숨어 있는 유의미한 차이 찾기',
+              role: 'data',
+            },
+            {
+              id: 'B',
+              label: '복잡한 표 대신 핵심 결론이 단번에 보이도록 차트와 슬라이드 화면 시각화하기',
+              role: 'design',
+            },
+          ],
+        },
+        {
+          id: 11,
+          context: '캠퍼스 일상',
+          question: '시험 기간이나 수강신청 시즌, 내 학교생활을 편하게 만들려고 해보고 싶은 것은?',
+          options: [
+            {
+              id: 'A',
+              label: '시간표 조합이나 빈 강의실 알림처럼 나에게 꼭 맞는 작은 웹·앱 도구 만들기',
+              role: 'dev',
+            },
+            {
+              id: 'B',
+              label: '학기별 공부 시간·과제 비중·성적 변화를 기록해 나만의 효율 패턴 분석하기',
+              role: 'data',
+            },
+          ],
+        },
+        {
+          id: 12,
+          context: '동아리 · 대외활동',
+          question: '팀 프로젝트 중간 점검에서 “뭔가 조금 아쉬운데?”라는 피드백을 받았다면?',
+          options: [
+            {
+              id: 'A',
+              label: '처음 세운 목표와 핵심 타깃이 흐려지지 않았는지 기획 방향과 우선순위를 재점검한다',
+              role: 'pm',
+            },
+            {
+              id: 'B',
+              label: '사용자가 처음 마주하는 첫 인상과 세세한 이용 경험이 매끄러운지 화면을 다듬는다',
+              role: 'design',
+            },
+          ],
+        },
+      ];
+
+      const ROLE_RESULTS = {
+        pm: {
+          title: '기획형 PM',
+          nickname: '판 짜고 팀을 이끄는 캠퍼스 캡틴',
+          description:
+            '조별과제나 동아리에서 “우리가 왜 이걸 만들고 있지?”라는 핵심부터 짚어내는 타입이에요. 흩어진 의견을 하나로 모으고, 일정과 우선순위를 정리해 팀 전체가 같은 방향을 보도록 만드는 데 강점이 있어요. 직접 코드를 짜거나 디자인을 하지 않아도, 서비스의 큰 그림을 그리고 완성까지 이끄는 서비스 기획자·PM 직무와 잘 어울려요.',
+          theme: {
+            pageBg: '#fff3f3',
+            heroBg: '#ffe8e8',
+            border: '#f3c5c5',
+            divider: '#f7dfdf',
+            accent: '#cf3838',
+            accentHover: '#b82c2c',
+            accentText: '#a82626',
+            softBtn: '#ffeaea',
+            softBtnHover: '#ffd8d8',
+            barTrack: '#fff0f0',
+            barMuted: '#f1baba',
+          },
+          prepItems: [
+            {
+              category: '자격증',
+              title: 'SQLD (SQL 개발자)',
+              detail: '개발·데이터 팀과 막힘없이 대화하고 필요한 숫자를 직접 확인하는 기본기예요.',
+            },
+            {
+              category: '자격증',
+              title: 'ADsP (데이터분석 준전문가)',
+              detail: '개인적인 감이 아니라 객관적 근거를 바탕으로 기획 설득력을 높이는 데 좋아요.',
+            },
+            {
+              category: '추천 과목',
+              title: '서비스기획 · 경영전략 · 소비자행동론',
+              detail: '사용자의 문제를 정의하고 서비스 구조와 비즈니스 모델을 짜는 시야를 넓혀줘요.',
+            },
+          ],
+        },
+        dev: {
+          title: '구현형 개발자',
+          nickname: '아이디어를 작동하는 결과물로 만드는 빌더',
+          description:
+            '말로만 떠다니는 아이디어보다 “이게 실제로 어떻게 돌아갈까?”를 먼저 떠올리는 실행파예요. 반복되는 번거로운 일을 자동화하거나, 오류가 생겼을 때 원인을 차근차근 짚어 해결할 때 큰 성취감을 느껴요. 논리적인 구조를 세우고 눈에 보이는 웹·앱 서비스를 직접 구현해내는 프론트엔드·백엔드 개발자 직무와 딱 맞아요.',
+          theme: {
+            pageBg: '#f2f6ff',
+            heroBg: '#e4edff',
+            border: '#c2d4fa',
+            divider: '#e1eafc',
+            accent: '#2b59e0',
+            accentHover: '#2147bd',
+            accentText: '#1f46b8',
+            softBtn: '#ebf1ff',
+            softBtnHover: '#dae5ff',
+            barTrack: '#eef3ff',
+            barMuted: '#b8cdf7',
+          },
+          prepItems: [
+            {
+              category: '자격증',
+              title: '정보처리기사',
+              detail: '비전공자라도 소프트웨어 개발에 필요한 CS 기초 체력을 증명하기 좋은 자격증이에요.',
+            },
+            {
+              category: '자격증',
+              title: 'SQLD (SQL 개발자)',
+              detail: '서비스 데이터를 안전하게 저장하고 다루는 데이터베이스 구조를 익히는 데 필수예요.',
+            },
+            {
+              category: '추천 과목',
+              title: '자료구조 · 웹프로그래밍 · 데이터베이스',
+              detail: '실무 코딩 테스트와 팀 프로젝트 구현력을 탄탄히 다져주는 핵심 과목들이에요.',
+            },
+          ],
+        },
+        design: {
+          title: '공감형 디자이너',
+          nickname: '사용자의 시선으로 경험을 빚어내는 크리에이터',
+          description:
+            '같은 정보라도 화면 배치와 색감, 문구 하나에 따라 사람들의 반응이 크게 달라진다는 걸 잘 알아요. 사소한 불편함을 그냥 넘기지 않고 “어떻게 하면 더 직관적이고 매력적일까?”를 자주 고민해요. 사용자의 마음을 읽어 쓰기 편한 흐름과 보기 좋은 화면을 설계하는 UX/UI·프로덕트 디자이너 직무와 잘 어울려요.',
+          theme: {
+            pageBg: '#fff5ee',
+            heroBg: '#ffe7d9',
+            border: '#f4c9b0',
+            divider: '#f7e1d4',
+            accent: '#c44c16',
+            accentHover: '#aa3e0e',
+            accentText: '#a33c0f',
+            softBtn: '#ffece0',
+            softBtnHover: '#ffdcc7',
+            barTrack: '#fff1e8',
+            barMuted: '#f4c2a6',
+          },
+          prepItems: [
+            {
+              category: '자격증',
+              title: 'GTQ 그래픽기술자격 1급',
+              detail: '그래픽 툴 활용 감각을 빠르게 익히고 포트폴리오 작업 속도를 높이는 데 유용해요.',
+            },
+            {
+              category: '자격증',
+              title: '웹디자인개발기능사',
+              detail: '화면 설계부터 웹 레이아웃이 실제로 구현되는 기본 원리까지 한 번에 정리할 수 있어요.',
+            },
+            {
+              category: '추천 과목',
+              title: 'HCI 개론 · UX/UI 리서치 · 시각디자인',
+              detail: '단순히 예쁜 화면을 넘어 ‘왜 쓰기 편한지’를 논리적으로 설명하는 힘을 길러줘요.',
+            },
+          ],
+        },
+        data: {
+          title: '탐구형 데이터 애널리스트',
+          nickname: '숫자 속 숨은 힌트로 정답을 찾는 탐정',
+          description:
+            '“왠지 그럴 것 같아서”보다는 근거와 패턴이 눈으로 보일 때 마음이 놓이는 분석가 타입이에요. 흩어져 있는 설문 응답이나 아르바이트 매출 기록에서 남들이 지나친 흐름을 찾아내는 데 집중력을 발휘해요. 데이터를 정리해 팀이 더 똑똑한 결정을 내리도록 돕는 데이터 분석가·비즈니스 애널리스트 직무와 잘 맞아요.',
+          theme: {
+            pageBg: '#f0faf6',
+            heroBg: '#dcf3ea',
+            border: '#b3e0cf',
+            divider: '#dcefe8',
+            accent: '#0f7a5d',
+            accentHover: '#0a614a',
+            accentText: '#0c634c',
+            softBtn: '#e4f5ee',
+            softBtnHover: '#cfede1',
+            barTrack: '#eaf7f2',
+            barMuted: '#abdccb',
+          },
+          prepItems: [
+            {
+              category: '자격증',
+              title: 'ADsP (데이터분석 준전문가)',
+              detail: '데이터 분석 입문자가 전체 분석 흐름과 기초 통계 개념을 잡기에 가장 좋아요.',
+            },
+            {
+              category: '자격증',
+              title: 'SQLD (SQL 개발자)',
+              detail: '실무에서 원하는 데이터를 직접 추출하고 가공할 때 가장 먼저 쓰이는 핵심 언어예요.',
+            },
+            {
+              category: '추천 과목',
+              title: '기초통계학 · 파이썬 데이터분석 · 마케팅조사론',
+              detail: '숫자를 읽고 설득력 있는 인사이트로 바꿔 팀을 설득하는 힘을 길러줘요.',
+            },
+          ],
+        },
+      };
+
+      function getSvgIllustration(type) {
+        if (type === 'hero') {
+          return `
+            <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="대학생 진로 탐색 책상 일러스트">
+              <rect width="400" height="300" fill="#FFF5F5"/>
+              <path d="M55 215 C115 215, 130 140, 200 140 C270 140, 290 78, 345 78" stroke="#FAD4D4" stroke-width="6" stroke-linecap="round"/>
+              <path d="M55 235 C140 235, 165 180, 235 180 C295 180, 310 225, 348 225" stroke="#F4B6B6" stroke-width="4" stroke-dasharray="7 6" stroke-linecap="round"/>
+              <rect x="92" y="102" width="136" height="92" rx="10" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.5"/>
+              <rect x="104" y="114" width="112" height="68" rx="5" fill="#E05252"/>
+              <path d="M118 148 H202 M160 128 V168" stroke="#FFF5F5" stroke-width="2" stroke-linecap="round"/>
+              <rect x="76" y="194" width="168" height="14" rx="7" fill="#FAD4D4" stroke="#2B2121" stroke-width="2.5"/>
+              <rect x="218" y="164" width="84" height="68" rx="8" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.5"/>
+              <line x1="260" y1="164" x2="260" y2="232" stroke="#2B2121" stroke-width="2"/>
+              <rect x="228" y="176" width="22" height="18" rx="3" fill="#FAD4D4"/>
+              <line x1="270" y1="180" x2="292" y2="180" stroke="#E05252" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="270" y1="192" x2="290" y2="192" stroke="#2B2121" stroke-width="2" stroke-linecap="round"/>
+              <line x1="270" y1="204" x2="286" y2="204" stroke="#2B2121" stroke-width="2" stroke-linecap="round"/>
+              <rect x="282" y="106" width="32" height="36" rx="6" fill="#FAD4D4" stroke="#2B2121" stroke-width="2.5"/>
+              <path d="M314 114 H322 C326 114, 326 132, 322 132 H314" stroke="#2B2121" stroke-width="2.5"/>
+              <path d="M294 94 Q290 84 296 76 M304 94 Q300 84 306 76" stroke="#E05252" stroke-width="2" stroke-linecap="round"/>
+            </svg>`;
+        }
+        if (type === 'pm') {
+          return `
+            <svg viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="기획형 PM 일러스트">
+              <rect width="260" height="260" fill="#FFF5F5"/>
+              <rect x="34" y="42" width="192" height="176" rx="14" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.5"/>
+              <line x1="34" y1="78" x2="226" y2="78" stroke="#2B2121" stroke-width="2"/>
+              <rect x="50" y="96" width="44" height="44" rx="6" fill="#E05252" stroke="#2B2121" stroke-width="2"/>
+              <rect x="108" y="96" width="44" height="44" rx="6" fill="#FAD4D4" stroke="#2B2121" stroke-width="2"/>
+              <rect x="50" y="154" width="44" height="44" rx="6" fill="#FAD4D4" stroke="#2B2121" stroke-width="2"/>
+              <circle cx="182" cy="158" r="28" fill="#FFF5F5" stroke="#2B2121" stroke-width="2.5"/>
+              <polygon points="182,138 190,158 182,178 174,158" fill="#E05252" stroke="#2B2121" stroke-width="1.8"/>
+              <path d="M94 118 H108 M130 140 V158 H154" stroke="#2B2121" stroke-width="2" stroke-linecap="round"/>
+            </svg>`;
+        }
+        if (type === 'dev') {
+          return `
+            <svg viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="구현형 개발자 일러스트">
+              <rect width="260" height="260" fill="#F2F6FF"/>
+              <rect x="52" y="64" width="156" height="106" rx="10" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.5"/>
+              <rect x="64" y="76" width="132" height="82" rx="6" fill="#E4EDFF"/>
+              <rect x="34" y="170" width="192" height="16" rx="8" fill="#B8CDF7" stroke="#2B2121" stroke-width="2.5"/>
+              <rect x="76" y="90" width="44" height="24" rx="5" fill="#2B59E0" stroke="#2B2121" stroke-width="2"/>
+              <rect x="128" y="90" width="54" height="24" rx="5" fill="#FFFFFF" stroke="#2B2121" stroke-width="2"/>
+              <circle cx="106" cy="134" r="14" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.2"/>
+              <circle cx="106" cy="134" r="5" fill="#2B59E0"/>
+              <circle cx="148" cy="130" r="18" fill="#B8CDF7" stroke="#2B2121" stroke-width="2.2"/>
+              <circle cx="148" cy="130" r="6" fill="#FFFFFF"/>
+            </svg>`;
+        }
+        if (type === 'design') {
+          return `
+            <svg viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="공감형 디자이너 일러스트">
+              <rect width="260" height="260" fill="#FFF5EE"/>
+              <rect x="48" y="48" width="96" height="164" rx="10" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.5"/>
+              <rect x="60" y="64" width="72" height="44" rx="4" fill="#FFE7D9" stroke="#2B2121" stroke-width="2"/>
+              <line x1="60" y1="64" x2="132" y2="108" stroke="#C44C16" stroke-width="1.8"/>
+              <line x1="132" y1="64" x2="60" y2="108" stroke="#C44C16" stroke-width="1.8"/>
+              <rect x="60" y="122" width="32" height="24" rx="4" fill="#C44C16"/>
+              <rect x="100" y="122" width="32" height="24" rx="4" fill="#F4C9B0"/>
+              <rect x="60" y="160" width="72" height="10" rx="4" fill="#2B2121"/>
+              <path d="M126 164 L198 62 L210 70 L138 172 L122 178 Z" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.5"/>
+              <rect x="172" y="138" width="44" height="30" rx="6" fill="#C44C16" stroke="#2B2121" stroke-width="2"/>
+              <rect x="172" y="178" width="44" height="30" rx="6" fill="#F4C9B0" stroke="#2B2121" stroke-width="2"/>
+            </svg>`;
+        }
+        return `
+          <svg viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="탐구형 데이터 애널리스트 일러스트">
+            <rect width="260" height="260" fill="#F0FAF6"/>
+            <rect x="38" y="54" width="184" height="134" rx="12" fill="#FFFFFF" stroke="#2B2121" stroke-width="2.5"/>
+            <rect x="56" y="142" width="22" height="32" rx="4" fill="#ABDCCB" stroke="#2B2121" stroke-width="2"/>
+            <rect x="88" y="122" width="22" height="52" rx="4" fill="#0F7A5D" stroke="#2B2121" stroke-width="2"/>
+            <rect x="120" y="102" width="22" height="72" rx="4" fill="#ABDCCB" stroke="#2B2121" stroke-width="2"/>
+            <rect x="152" y="80" width="22" height="94" rx="4" fill="#0F7A5D" stroke="#2B2121" stroke-width="2"/>
+            <polyline points="66,120 98,104 130,86 164,68" stroke="#2B2121" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="152" cy="128" r="42" fill="#DCF3EA" fill-opacity="0.65" stroke="#2B2121" stroke-width="3"/>
+            <line x1="182" y1="158" x2="216" y2="194" stroke="#2B2121" stroke-width="7" stroke-linecap="round"/>
+          </svg>`;
+      }
+
+      const state = {
+        phase: 'start',
+        currentIndex: 0,
+        answers: {},
+        selectedOptionId: null,
+        copied: false,
+        timerId: null,
+      };
+
+      function clearPendingTimer() {
+        if (state.timerId !== null) {
+          clearTimeout(state.timerId);
+          state.timerId = null;
+        }
+      }
+
+      function evaluateAnswers() {
+        const scores = { pm: 0, dev: 0, design: 0, data: 0 };
+        for (const q of QUIZ_QUESTIONS) {
+          const picked = state.answers[q.id];
+          if (picked) {
+            scores[picked.role] += 1;
+          }
+        }
+
+        const maxScore = Math.max(...ROLE_ORDER.map((r) => scores[r]));
+        const tied = ROLE_ORDER.filter((r) => scores[r] === maxScore);
+
+        if (tied.length === 1) {
+          return { topRole: tied[0], scores };
+        }
+
+        let winner = tied[0];
+        for (let i = 1; i < tied.length; i += 1) {
+          const challenger = tied[i];
+          let winnerWins = 0;
+          let challengerWins = 0;
+          let lastWinner = null;
+
+          for (const q of QUIZ_QUESTIONS) {
+            const pair = [q.options[0].role, q.options[1].role];
+            if (pair.includes(winner) && pair.includes(challenger)) {
+              const pickedRole = state.answers[q.id]?.role;
+              if (pickedRole === winner) {
+                winnerWins += 1;
+                lastWinner = winner;
+              } else if (pickedRole === challenger) {
+                challengerWins += 1;
+                lastWinner = challenger;
+              }
+            }
+          }
+
+          if (challengerWins > winnerWins || (challengerWins === winnerWins && lastWinner === challenger)) {
+            winner = challenger;
+          }
+        }
+
+        return { topRole: winner, scores };
+      }
+
+      async function copyTextToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return true;
+          } catch (err) {
+            // 아래 fallback으로 진행
+          }
+        }
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.setAttribute('readonly', '');
+          textarea.style.position = 'fixed';
+          textarea.style.left = '-9999px';
+          document.body.appendChild(textarea);
+          textarea.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(textarea);
+          return ok;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      function startQuiz() {
+        clearPendingTimer();
+        state.phase = 'quiz';
+        state.currentIndex = 0;
+        state.answers = {};
+        state.selectedOptionId = null;
+        state.copied = false;
+        render();
+      }
+
+      function resetToStart() {
+        clearPendingTimer();
+        state.phase = 'start';
+        state.currentIndex = 0;
+        state.answers = {};
+        state.selectedOptionId = null;
+        state.copied = false;
+        render();
+      }
+
+      function handleSelectOption(optionId) {
+        if (state.selectedOptionId !== null) return;
+        const currentQ = QUIZ_QUESTIONS[state.currentIndex];
+        const option = currentQ.options.find((o) => o.id === optionId);
+        if (!option) return;
+
+        state.selectedOptionId = optionId;
+        state.answers[currentQ.id] = option;
+        render();
+
+        clearPendingTimer();
+        state.timerId = setTimeout(() => {
+          state.selectedOptionId = null;
+          if (state.currentIndex + 1 < QUIZ_QUESTIONS.length) {
+            state.currentIndex += 1;
+          } else {
+            state.phase = 'result';
+          }
+          render();
+        }, 280);
+      }
+
+      function handleBack() {
+        clearPendingTimer();
+        state.selectedOptionId = null;
+        if (state.currentIndex > 0) {
+          state.currentIndex -= 1;
+        } else {
+          state.phase = 'start';
+        }
+        render();
+      }
+
+      async function handleShare() {
+        const evaluation = evaluateAnswers();
+        const profile = ROLE_RESULTS[evaluation.topRole];
+        const prepLines = profile.prepItems
+          .map((item, idx) => `${idx + 1}. [${item.category}] ${item.title}`)
+          .join('\n');
+        const scoreLines = ROLE_ORDER.map(
+          (role) => `${ROLE_SHORT_LABELS[role]} ${evaluation.scores[role]}/6`
+        ).join(' · ');
+
+        const shareText = [
+          '[나에게 맞는 직무 유형 테스트 결과]',
+          `나의 추천 직무: ${profile.title}`,
+          `"${profile.nickname}"`,
+          '',
+          profile.description,
+          '',
+          '추천 자격증·과목:',
+          prepLines,
+          '',
+          `일하는 스타일 분포: ${scoreLines}`,
+        ].join('\n');
+
+        const ok = await copyTextToClipboard(shareText);
+        if (ok) {
+          state.copied = true;
+          render();
+          setTimeout(() => {
+            state.copied = false;
+            if (state.phase === 'result') render();
+          }, 2400);
+        }
+      }
+
+      function render() {
+        const root = document.getElementById('app');
+
+        if (state.phase === 'start') {
+          root.style.backgroundColor = '#fff7f7';
+          root.innerHTML = `
+            <header class="top-header">
+              <div class="header-inner">
+                <button type="button" class="brand-btn" id="brand-btn">나에게 맞는 직무 유형 테스트</button>
+                <button type="button" class="header-action-btn" id="header-start-btn">테스트 시작</button>
+              </div>
+            </header>
+            <main class="main-stage">
+              <section class="start-card">
+                <div class="start-grid">
+                  <div class="start-content">
+                    <div>
+                      <p class="kicker">대학생 2~4학년 진로 탐색 · 12문항 · 약 2분</p>
+                      <h1 class="hero-title">나에게 맞는<br />직무 유형 테스트</h1>
+                      <p class="hero-desc">
+                        조별과제, 동아리, 아르바이트처럼 익숙한 대학생활 상황 12가지를 통해
+                        내가 일할 때 가장 편안하고 빛나는 방식을 알아보세요.
+                      </p>
+                    </div>
+                    <div class="role-preview">
+                      <p class="role-preview-label">측정하는 4가지 대표 직무 스타일</p>
+                      <div class="role-preview-list">
+                        <span>기획형 PM</span><span class="dot-sep" aria-hidden="true">·</span>
+                        <span>구현형 개발자</span><span class="dot-sep" aria-hidden="true">·</span>
+                        <span>공감형 디자이너</span><span class="dot-sep" aria-hidden="true">·</span>
+                        <span>탐구형 데이터 애널리스트</span>
+                      </div>
+                    </div>
+                    <div>
+                      <button type="button" class="primary-btn auto-width" id="start-btn">
+                        <span>시작하기</span>
+                        <span aria-hidden="true">→</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="illustration-box">
+                    ${getSvgIllustration('hero')}
+                  </div>
+                </div>
+              </section>
+            </main>
+          `;
+
+          document.getElementById('brand-btn').addEventListener('click', resetToStart);
+          document.getElementById('header-start-btn').addEventListener('click', startQuiz);
+          document.getElementById('start-btn').addEventListener('click', startQuiz);
+          return;
+        }
+
+        if (state.phase === 'quiz') {
+          root.style.backgroundColor = '#fff7f7';
+          const q = QUIZ_QUESTIONS[state.currentIndex];
+          const progress = (state.currentIndex + 1) / QUIZ_QUESTIONS.length;
+
+          root.innerHTML = `
+            <header class="top-header">
+              <div class="header-inner narrow">
+                <button type="button" class="back-btn" id="back-btn">
+                  <span aria-hidden="true">←</span>
+                  <span>${state.currentIndex === 0 ? '처음으로' : '이전 질문'}</span>
+                </button>
+                <div class="progress-wrap">
+                  <div class="progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="12" aria-valuenow="${state.currentIndex + 1}">
+                    <div class="progress-fill" style="transform: scaleX(${progress})"></div>
+                  </div>
+                  <span class="progress-text">${state.currentIndex + 1}/${QUIZ_QUESTIONS.length}</span>
+                </div>
+              </div>
+            </header>
+            <main class="main-stage">
+              <div class="quiz-container">
+                <p class="question-meta">Q${q.id} · ${q.context}</p>
+                <h1 class="question-title">${q.question}</h1>
+                <div class="options-grid">
+                  ${q.options
+                    .map((opt) => {
+                      const isSelected = state.selectedOptionId === opt.id;
+                      const isDimmed = state.selectedOptionId !== null && !isSelected;
+                      const stateClass = isSelected ? 'selected' : isDimmed ? 'dimmed' : '';
+                      return `
+                        <button
+                          type="button"
+                          class="option-card ${stateClass}"
+                          data-option="${opt.id}"
+                          ${state.selectedOptionId !== null ? 'disabled' : ''}
+                          aria-pressed="${isSelected}"
+                        >
+                          <div class="option-top">
+                            <span class="option-badge">${opt.id}</span>
+                            ${isSelected ? '<span class="option-check" aria-hidden="true">✓</span>' : ''}
+                          </div>
+                          <p class="option-label">${opt.label}</p>
+                        </button>
+                      `;
+                    })
+                    .join('')}
+                </div>
+              </div>
+            </main>
+          `;
+
+          document.getElementById('back-btn').addEventListener('click', handleBack);
+          root.querySelectorAll('.option-card').forEach((btn) => {
+            btn.addEventListener('click', () => handleSelectOption(btn.dataset.option));
+          });
+          return;
+        }
+
+        const evaluation = evaluateAnswers();
+        const profile = ROLE_RESULTS[evaluation.topRole];
+        const t = profile.theme;
+
+        root.style.backgroundColor = t.pageBg;
+        root.style.setProperty('--role-hero-bg', t.heroBg);
+        root.style.setProperty('--role-border', t.border);
+        root.style.setProperty('--role-divider', t.divider);
+        root.style.setProperty('--role-accent', t.accent);
+        root.style.setProperty('--role-accent-hover', t.accentHover);
+        root.style.setProperty('--role-accent-text', t.accentText);
+        root.style.setProperty('--role-soft-btn', t.softBtn);
+        root.style.setProperty('--role-soft-btn-hover', t.softBtnHover);
+        root.style.setProperty('--role-bar-track', t.barTrack);
+        root.style.setProperty('--role-bar-muted', t.barMuted);
+
+        root.innerHTML = `
+          <header class="top-header" style="background-color: ${t.pageBg}; border-bottom-color: ${t.border};">
+            <div class="header-inner">
+              <button type="button" class="brand-btn" id="brand-btn">나에게 맞는 직무 유형 테스트</button>
+              <button type="button" class="header-action-btn" id="header-restart-btn" style="color: ${t.accentText};">다시하기</button>
+            </div>
+          </header>
+          <main class="main-stage">
+            <div class="result-grid">
+              <section class="result-hero-card">
+                <div>
+                  <p class="result-kicker">나의 추천 직무 유형</p>
+                  <h1 class="result-title">${profile.title}</h1>
+                  <p class="result-nickname">“${profile.nickname}”</p>
+                </div>
+                <div class="illustration-box square">
+                  ${getSvgIllustration(evaluation.topRole)}
+                </div>
+                <p class="result-desc">${profile.description}</p>
+              </section>
+
+              <section class="result-detail-card">
+                <div>
+                  <h2 class="section-heading">지금부터 준비하면 좋은 자격증 · 과목 3가지</h2>
+                  <p class="section-sub">대학생 시기에 부담 없이 시작해 진로 방향을 다질 수 있는 추천 목록이에요.</p>
+                  <ul class="prep-list">
+                    ${profile.prepItems
+                      .map(
+                        (item, idx) => `
+                        <li class="prep-item">
+                          <span class="prep-meta">0${idx + 1} · ${item.category}</span>
+                          <p class="prep-title">${item.title}</p>
+                          <p class="prep-detail">${item.detail}</p>
+                        </li>
+                      `
+                      )
+                      .join('')}
+                  </ul>
+                </div>
+
+                <div>
+                  <h2 class="chart-title">12개 답변으로 본 내 일하는 스타일 분포</h2>
+                  <div class="chart-rows">
+                    ${ROLE_ORDER.map((role) => {
+                      const score = evaluation.scores[role];
+                      const isWinner = role === evaluation.topRole;
+                      const ratio = Math.max(score / 6, 0.04);
+                      return `
+                        <div class="chart-row">
+                          <span class="chart-label ${isWinner ? 'winner' : ''}">${ROLE_SHORT_LABELS[role]}</span>
+                          <div class="chart-track">
+                            <div class="chart-fill ${isWinner ? 'winner' : ''}" style="transform: scaleX(${ratio});"></div>
+                          </div>
+                          <span class="chart-score ${isWinner ? 'winner' : ''}">${score}/6</span>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+
+                <div>
+                  <div class="action-row">
+                    <button type="button" class="share-btn" id="share-btn">
+                      ${state.copied ? '✓ 복사 완료!' : '공유하기'}
+                    </button>
+                    <button type="button" class="primary-btn result-primary-btn" id="restart-btn">
+                      다시하기
+                    </button>
+                  </div>
+                  <p class="copy-feedback" aria-live="polite">
+                    ${state.copied ? '결과 텍스트가 클립보드에 복사되었어요. 원하는 곳에 붙여넣어 공유해보세요.' : ''}
+                  </p>
+                </div>
+              </section>
+            </div>
+          </main>
+        `;
+
+        document.getElementById('brand-btn').addEventListener('click', resetToStart);
+        document.getElementById('header-restart-btn').addEventListener('click', resetToStart);
+        document.getElementById('share-btn').addEventListener('click', handleShare);
+        document.getElementById('restart-btn').addEventListener('click', resetToStart);
+      }
+
+      render();
+    </script>
+  </body>
+</html>
